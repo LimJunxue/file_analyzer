@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
+import com.filethings.model.CSVCellData;
+
 import javafx.scene.Parent;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
@@ -44,14 +46,14 @@ public class CSVFileServiceTest {
         assertNotNull(view);
 
         assertEquals(TableView.class, view.getClass());
-        TableView<List<String>> tableView = (TableView<List<String>>) view;
+        TableView<List<CSVCellData>> tableView = (TableView<List<CSVCellData>>) view;
         assertEquals("header1", tableView.getColumns().get(0).getText());
         assertEquals("header2", tableView.getColumns().get(1).getText());
 
-        List<List<String>> items = tableView.getItems();
+        List<List<CSVCellData>> items = tableView.getItems();
         assertEquals(5, items.size());
-        assertEquals("1", items.get(0).get(0));
-        assertEquals(" ", items.get(0).get(1));
+        assertEquals("1", items.get(0).get(0).getValue());
+        assertEquals("", items.get(0).get(1).getValue());
     }
 
     @Test
