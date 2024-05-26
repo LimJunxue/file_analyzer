@@ -1,6 +1,6 @@
 # File Analyzer
 
-[![Java CI with Maven](https://github.com/LimJunxue/file_analyzer/actions/workflows/maven.yml/badge.svg)](https://github.com/LimJunxue/file_analyzer/actions/workflows/maven.yml)
+[![Java CI with Maven](https://github.com/LimJunxue/file_analyzer/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/LimJunxue/file_analyzer/actions/workflows/maven-publish.yml)
 
 ![app](app.png)
 
