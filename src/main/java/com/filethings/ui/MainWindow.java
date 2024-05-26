@@ -8,6 +8,7 @@ import com.filethings.service.CSVFileService;
 import com.filethings.service.AbstractFileService;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -18,6 +19,12 @@ public class MainWindow {
 
     @FXML
     private AnchorPane contentPane;
+
+    @FXML
+    private Label numWordsLabel;
+
+    @FXML
+    private Label numLettersLabel;
 
     /**
      * Opens a file chooser dialog and displays the selected file.
@@ -36,6 +43,8 @@ public class MainWindow {
         AnchorPane.setBottomAnchor(view, 0.0);
         AnchorPane.setLeftAnchor(view, 0.0);
         AnchorPane.setRightAnchor(view, 0.0);
+
+        fileService.analyzeFile(file, numWordsLabel, numLettersLabel);
     }
 
 }
