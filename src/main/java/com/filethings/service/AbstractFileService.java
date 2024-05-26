@@ -57,4 +57,13 @@ public abstract class AbstractFileService {
      * @return a Parent view of the file
      */
     public abstract Parent viewFile(File file) throws IOException;
+
+    /**
+     * Analyzes a file and updates the given labels with the results.
+     * 
+     * @param file the file to analyze
+     * @param numWordsLabel the label to update with the number of words
+     * @param numLettersLabel the label to update with the number of letters
+     */
+    public abstract void analyzeFile(File file, Label numWordsLabel, Label numLettersLabel) throws IOException;
 }

@@ -98,4 +98,39 @@ public class CSVFileService extends AbstractFileService {
         }
     }
     
+    /**
+     * Analyzes a CSV file and displays the number of words and letters in the file.
+     * 
+     * @param file the file to analyze
+     * @param numWordsLabel the label to display the number of words
+     * @param numLettersLabel the label to display the number of letters
+     * @throws IOException if an error occurs while reading the file
+     */
+    @Override
+    public void analyzeFile(File file, Label numWordsLabel, Label numLettersLabel) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String headerLine = reader.readLine();
+            if (headerLine == null) {
+                return;
+            }
+
+            int numWords = 0;
+            int numLetters = 0;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] words = line.split(",");
+                for (String word : words) {
+                    numWords++;
+                    numLetters += word.length();
+                }
+            }
+
+            numWordsLabel.setText("Number of Words: " + numWords);
+            numLettersLabel.setText("Number of Letters: " + numLetters);
+        } catch (IOException e) {
+            logger.severe("Error reading file: " + e.getMessage());
+            throw new IOException("Error reading file: " + e.getMessage());
+        }
+    }
+
 }
