@@ -1,13 +1,14 @@
 package com.filethings.service;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.filethings.commons.FileType;
+import com.filethings.model.FileType;
 
 /**
  * AbstractFileService is an abstract class that provides a template for file services.

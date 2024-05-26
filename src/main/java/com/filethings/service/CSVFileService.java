@@ -7,13 +7,20 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.filethings.commons.FileType;
+import com.filethings.model.CSVCellData;
+import com.filethings.model.FileType;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.stage.FileChooser;
 
 /**
@@ -41,7 +48,7 @@ public class CSVFileService extends AbstractFileService {
             throw new IllegalArgumentException("File is not a CSV file");
         }
 
-        TableView<List<String>> csvTable = new TableView<>();
+        TableView<List<CSVCellData>> csvTable = new TableView<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String headerLine = reader.readLine();
             if (headerLine == null) {
@@ -49,24 +56,45 @@ public class CSVFileService extends AbstractFileService {
             }
 
             List<String> headers = Arrays.asList(headerLine.split(","));
-            for (int i = 0; i < headers.size(); i++) {
-                TableColumn<List<String>, String> column = new TableColumn<>(headers.get(i));
-                final int colIndex = i;
-                column.setCellValueFactory(data -> {
-                    String cellValue = data.getValue().size() > colIndex ? data.getValue().get(colIndex).trim() : " ";
-                    return new SimpleStringProperty(cellValue);
-                });
-                csvTable.getColumns().add(column);
-            }
+            setColumns(csvTable, headers);
 
             reader.lines()
-                .map(line -> Arrays.asList(line.split(",")))
-                .forEach(lineArray -> csvTable.getItems().add(lineArray));
+                .map(line -> Arrays.stream(line.split(","))
+                    .map(value -> new CSVCellData(value))
+                    .collect(Collectors.toList()))
+                .forEach(lineArray ->  csvTable.getItems().add(lineArray));
 
             return csvTable;
         } catch (IOException e) {
             logger.severe("Error reading file: " + e.getMessage());
             throw new IOException("Error reading file: " + e.getMessage());
+        }
+    }
+
+    private void setColumns(TableView<List<CSVCellData>> csvTable, List<String> headers) {
+        for (int i = 0; i < headers.size(); i++) {
+            TableColumn<List<CSVCellData>, CSVCellData> column = new TableColumn<>(headers.get(i));
+            final int colIndex = i;
+            column.setCellValueFactory(data -> {
+                CSVCellData cellValue = data.getValue().size() > colIndex ? data.getValue().get(colIndex) : new CSVCellData("");
+                return new SimpleObjectProperty<>(cellValue);
+            });
+            column.setCellFactory(tc -> {
+                TableCell<List<CSVCellData>, CSVCellData> cell = new TableCell<>();
+                Tooltip tooltip = new Tooltip();
+                cell.setTooltip(tooltip);
+                cell.itemProperty().addListener((obs, oldItem, newItem) -> {
+                    if (newItem != null) {
+                        tooltip.setText(newItem.getType().toString());
+                        cell.setText(newItem.getValue());
+                    } else {
+                        tooltip.setText(null);
+                        cell.setText(null);
+                    }
+                });
+                return cell;
+            });
+            csvTable.getColumns().add(column);
         }
     }
     
